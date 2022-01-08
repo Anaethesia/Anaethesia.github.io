@@ -240,29 +240,21 @@ rawr araw</p>
   </a>
 </nav>
 
-  </footer><span id="/posts/tech/tech/" class="leancloud_visitors" data-flag-title="Tech">
-  <i class="fas fa-eye"></i> <span class="post-meta-item-text">阅读量  </span>
-  <span class="leancloud-visitors-count"></span>
-  <p></p>
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  <span id="busuanzi_container_site_uv">本站总访问量<span id="busuanzi_value_site_uv"></span>次</span>
-</span>
-<div id="vcomments"></div>
-<script src="//dp2px.com/demo/av-min.js"></script>
-<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-<script type="text/javascript">
-  new Valine({
-      el: '#vcomments' ,
-      appId: 'Fjj8sOOGaDt99u1G2OI7R1jI-MdYXbMMI',
-      appKey: 'Wj3gRMwvhRs3FHGAzSmGnBWI',
-      notify: 'false',
-      verify: 'false',
-      avatar: 'monsterid',
-      placeholder: '说点什么吧～',
-      serverURLs:'https:\/\/fjj8soog.api.lncldglobal.com',
-      visitor: 'true'
-  });
-</script>
+  </footer><div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+    <div id="tcomment"></div>
+    <script src="//cdn.jsdelivr.net/npm/@waline/client"></script>
+    <div id="waline"></div>
+    <script>
+      Waline({
+        el: '#waline',
+        serverURL: 'https://blog-api-ffdmacfzm-anaethesia.vercel.app',
+      });
+    </script>
+</div>
 </article>
     </main>
     
