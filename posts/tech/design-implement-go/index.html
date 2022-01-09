@@ -410,7 +410,7 @@
 </div><p>​	语法：词法输出的token序列是语法分析器的输入，进而确定语法结构</p>
 <p>​	Go 语言的解析器使用了 LALR(1) 的文法来解析词法分析过程中输出的 Token 序列，<strong>最右推导加向前查看</strong>构成了 Go 语言解析器的最基本原理，也是大多数编程语言的选择。</p>
 <p>​	Go语言文法的实现是parser结构体的fileOrNil方法。</p>
-<p>​	<img loading="lazy" src="https://img.draveness.me/2019-12-21-15769078928092-golang-parser.png" alt="golang-parse"  />
+<p>​	<img loading="lazy" src="https://i0.hdslb.com/bfs/album/ecc3de39ce1ca5ded478cd2e8670ef3994e014c2.png" alt="golang-parse"  />
 </p>
 <h3 id="类型检查">类型检查<a hidden class="anchor" aria-hidden="true" href="#类型检查">#</a></h3>
 <p>​	强弱类型</p>
@@ -425,10 +425,10 @@
 <p>​	Go 语言的编译器不仅使用静态类型检查来保证程序运行的类型安全，还会在编程期间引入类型信息，让工程师能够使用反射（reflect）来判断参数和变量的类型。当我们想要将 <code>interface{}</code> 转换成具体类型时会进行动态类型检查，如果无法发生转换就会发生程序崩溃。</p>
 <p>​	Go编译器类型检查的主要逻辑在 cmd/compile/internal/gc.typecheck 和cmd/compile/internal/gc.typecheck1中。</p>
 <h3 id="中间代码生成">中间代码生成<a hidden class="anchor" aria-hidden="true" href="#中间代码生成">#</a></h3>
-<p>​	<img loading="lazy" src="https://img.draveness.me/2019-12-23-15771129929822-intermediate-representation.png" alt="intermediate-representation"  />
+<p>​	<img loading="lazy" src="https://i0.hdslb.com/bfs/album/ea6f31c97c9f08dbcd1d2b6855d449786bb085fb.png" alt="intermediate-representation"  />
 </p>
 <p>​	中间代码的生成过程是从 AST 抽象语法树到 SSA 中间代码的转换过程。在这期间会对语法树中的关键字再进行改写，改写后的语法树会经过多轮处理转变成最后的 SSA 中间代码，相关代码中包括了大量 switch 语句、复杂的函数和调用栈，阅读和分析起来也非常困难。</p>
-<p><img loading="lazy" src="https://img.draveness.me/2019-12-23-15771129929852-ssa-html.png" alt="ssa-htm"  />
+<p><img loading="lazy" src="https://i0.hdslb.com/bfs/album/ed13f478bdf44335fb7c2f93963f4371213c20a2.png" alt="ssa-htm"  />
 </p>
 <p><strong>图 SSA 中间代码生成过程</strong></p>
 <h3 id="机器码生成">机器码生成<a hidden class="anchor" aria-hidden="true" href="#机器码生成">#</a></h3>
