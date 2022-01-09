@@ -6,13 +6,22 @@
     <description>Recent content in Learning notes on Anaethesia&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Jan 2022 00:15:27 +0800</lastBuildDate><atom:link href="https://Anaethesia.github.io/tags/learning-notes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Jan 2022 19:43:04 +0800</lastBuildDate><atom:link href="https://Anaethesia.github.io/tags/learning-notes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ddia</title>
+      <link>https://Anaethesia.github.io/posts/read/ddia/</link>
+      <pubDate>Sun, 09 Jan 2022 19:43:04 +0800</pubDate>
+      
+      <guid>https://Anaethesia.github.io/posts/read/ddia/</guid>
+      <description># DDIA学习笔记 第一章 可靠性、可扩展性、可维护性 ​ 可靠性： 系统在困境（adversity）（硬件故障、软件故障、人为错误）中仍可正常工作（</description>
+    </item>
+    
     <item>
       <title>Learning notes of Design and implement of Go</title>
-      <link>https://Anaethesia.github.io/posts/tech/design-implement-go/</link>
+      <link>https://Anaethesia.github.io/posts/read/design-implement-go/</link>
       <pubDate>Fri, 07 Jan 2022 00:15:27 +0800</pubDate>
       
-      <guid>https://Anaethesia.github.io/posts/tech/design-implement-go/</guid>
+      <guid>https://Anaethesia.github.io/posts/read/design-implement-go/</guid>
       <description>Chapter 2 编译原理 编译的核心过程 ​ 词法与语法分析、类型检查和 AST 转换、通用 SSA 生成和 机器代码生成。 词法和语法分析 ​ 词法： 将字符序列转换为标记序列的过程</description>
     </item>
     
