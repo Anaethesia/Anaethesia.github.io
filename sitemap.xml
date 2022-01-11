@@ -1,44 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://Anaethesia.github.io/posts/read/ddia/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/posts/read/design-implement-go/</loc>
-    <lastmod>2022-01-07T00:15:27+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/tags/ddia/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/tags/learning-notes/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/posts/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/tags/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/posts/read/</loc>
-    <lastmod>2022-01-09T19:43:04+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/tags/design-and-implement-of-go/</loc>
-    <lastmod>2022-01-07T00:15:27+08:00</lastmod>
-  </url><url>
-    <loc>https://Anaethesia.github.io/archives/</loc>
-  </url><url>
-    <loc>https://Anaethesia.github.io/categories/</loc>
-  </url><url>
-    <loc>https://Anaethesia.github.io/search/</loc>
-  </url><url>
-    <loc>https://Anaethesia.github.io/series/</loc>
-  </url><url>
-    <loc>https://Anaethesia.github.io/posts/life/</loc>
-  </url><url>
-    <loc>https://Anaethesia.github.io/posts/tech/</loc>
-  </url>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+
+
+<url>
+  <loc>https://anaethesia.github.io/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/search/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/archives/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/tags/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/tech/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/read/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/life/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/read/ddia/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/posts/read/design-implement-go/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/tags/ddia/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/tags/design-and-implement-of-go/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://anaethesia.github.io/tags/learning-notes/</loc>
+  <lastmod>2022-01-09T16:15:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
 </urlset>
