@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:ror="http://rorweb.com/0.1/" >
+<channel>
+  <title>ROR Sitemap for http://anaethesia.github.io/</title>
+  <link>http://anaethesia.github.io/</link>
+
+<item>
+     <link>https://anaethesia.github.io/</link>
+     <title>Anaethesia&amp;#39;s Blog</title>
+     <description>Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>0</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/search/</link>
+     <title>Search | Anaethesia&amp;#39;s Blog</title>
+     <description>search</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/</link>
+     <title>Posts | Anaethesia&amp;#39;s Blog</title>
+     <description>Posts - Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/archives/</link>
+     <title>Archive | Anaethesia&amp;#39;s Blog</title>
+     <description>archives</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/tags/</link>
+     <title>Tags | Anaethesia&amp;#39;s Blog</title>
+     <description>Tags | Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/tech/</link>
+     <title>👨🏻‍💻技术 | Anaethesia&amp;#39;s Blog</title>
+     <description>Articles about tech</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/read/</link>
+     <title>📕阅读 | Anaethesia&amp;#39;s Blog</title>
+     <description>Articles about books</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/life/</link>
+     <title>🏖生活 | Anaethesia&amp;#39;s Blog</title>
+     <description>Articles about life</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>1</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/read/ddia/</link>
+     <title>DDIA | Anaethesia&amp;#39;s Blog</title>
+     <description>第一章 可靠性、可扩展性、可维护性 ​ 可靠性： 系统在困境（adversity）（硬件故障、软件故障、人为错误）中仍可正常工作（正确完成功能，并能</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/posts/read/design-implement-go/</link>
+     <title>Learning notes of Design and implement of Go | Anaethesia&amp;#39;s Blog</title>
+     <description>Chapter 2 编译原理 编译的核心过程 ​ 词法与语法分析、类型检查和 AST 转换、通用 SSA 生成和 机器代码生成。 词法和语法分析 ​ 词法： 将字符序列转换为标记序列的过程</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/tags/ddia/</link>
+     <title>DDIA | Anaethesia&amp;#39;s Blog</title>
+     <description>DDIA | Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/tags/design-and-implement-of-go/</link>
+     <title>Design and implement of Go | Anaethesia&amp;#39;s Blog</title>
+     <description>Design and implement of Go | Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+<item>
+     <link>https://anaethesia.github.io/tags/learning-notes/</link>
+     <title>Learning notes | Anaethesia&amp;#39;s Blog</title>
+     <description>Learning notes | Anaethesia&amp;#39;s Blog</description>
+     <ror:updatePeriod></ror:updatePeriod>
+     <ror:sortOrder>2</ror:sortOrder>
+     <ror:resourceOf>sitemap</ror:resourceOf>
+</item>
+</channel>
+</rss>
+  
