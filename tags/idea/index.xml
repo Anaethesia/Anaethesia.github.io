@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>idea on Anaethesia&#39;s Blog</title>
+    <link>https://anaethesia.github.io/tags/idea/</link>
+    <description>Recent content in idea on Anaethesia&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 09 Jan 2022 19:43:04 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/tags/idea/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>idea in daily life</title>
+      <link>https://anaethesia.github.io/posts/read/idea/</link>
+      <pubDate>Sun, 09 Jan 2022 19:43:04 +0800</pubDate>
+      
+      <guid>https://anaethesia.github.io/posts/read/idea/</guid>
+      <description>说明 ​ 此篇只是为了记录在生活中一闪而过的灵感和idea，后续有时间会对其中感兴趣的进行调研与补充。 ideas ​ 边缘计算 ​ 微服务oneshot（不等服</description>
+    </item>
+    
+  </channel>
+</rss>
