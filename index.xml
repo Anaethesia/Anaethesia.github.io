@@ -6,7 +6,25 @@
     <description>Recent content on Anaethesia&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 09 Jan 2022 19:43:04 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 17 Jan 2024 15:00:00 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to do tech planning</title>
+      <link>https://anaethesia.github.io/posts/tech/how-to-do-tech-plan/</link>
+      <pubDate>Wed, 17 Jan 2024 15:00:00 +0800</pubDate>
+      
+      <guid>https://anaethesia.github.io/posts/tech/how-to-do-tech-plan/</guid>
+      <description>什么是技术规划 技术规划不仅是技术方案，更是最终愿景的思考过程，着重在战略，而非战术。 技术规划要抽象问题，发现本质原因，给出整体性、方向性、战</description>
+    </item>
+    
+    <item>
+      <title>idea in daily life</title>
+      <link>https://anaethesia.github.io/posts/read/idea/</link>
+      <pubDate>Sat, 06 Jan 2024 14:43:04 +0800</pubDate>
+      
+      <guid>https://anaethesia.github.io/posts/read/idea/</guid>
+      <description>说明 ​ 此篇只是为了记录在生活中一闪而过的灵感和idea，后续有时间会对其中感兴趣的进行调研与补充。 ideas ​ 边缘计算 ​ 微服务oneshot（不等服</description>
+    </item>
+    
     <item>
       <title>DDIA</title>
       <link>https://anaethesia.github.io/posts/read/ddia/</link>
@@ -14,15 +32,6 @@
       
       <guid>https://anaethesia.github.io/posts/read/ddia/</guid>
       <description>第一章 可靠性、可扩展性、可维护性 ​ 可靠性： 系统在困境（adversity）（硬件故障、软件故障、人为错误）中仍可正常工作（正确完成功能，并能</description>
-    </item>
-    
-    <item>
-      <title>idea in daily life</title>
-      <link>https://anaethesia.github.io/posts/read/idea/</link>
-      <pubDate>Sun, 09 Jan 2022 19:43:04 +0800</pubDate>
-      
-      <guid>https://anaethesia.github.io/posts/read/idea/</guid>
-      <description>说明 ​ 此篇只是为了记录在生活中一闪而过的灵感和idea，后续有时间会对其中感兴趣的进行调研与补充。 ideas ​ 边缘计算 ​ 微服务oneshot（不等服</description>
     </item>
     
     <item>
