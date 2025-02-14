@@ -6,7 +6,16 @@
     <description>Recent content in 👨🏻‍💻技术 on Anaethesia&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 17 Jan 2024 15:00:00 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 Feb 2025 15:00:00 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning about Distributed lock</title>
+      <link>https://anaethesia.github.io/posts/tech/distributed_lock/</link>
+      <pubDate>Fri, 14 Feb 2025 15:00:00 +0800</pubDate>
+      
+      <guid>https://anaethesia.github.io/posts/tech/distributed_lock/</guid>
+      <description>分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时</description>
+    </item>
+    
     <item>
       <title>How to do tech planning</title>
       <link>https://anaethesia.github.io/posts/tech/how-to-do-tech-plan/</link>

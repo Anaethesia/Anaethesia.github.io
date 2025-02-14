@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Learning about Distributed lock | Anaethesia&#39;s Blog</title>
+<meta name="keywords" content="Tech, Distributed lock" />
+<meta name="description" content="分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时">
+<meta name="author" content="Anaethesia">
+<link rel="canonical" href="https://anaethesia.github.io/posts/tech/distributed_lock/" />
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.7bdb1411b29ec9fed2b6395a081eabcb3262e7311bda855249d433c8b30a926e.css" integrity="sha256-e9sUEbKeyf7StjlaCB6ryzJi5zEb2oVSSdQzyLMKkm4=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://anaethesia.github.io/img/lc.jpeg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://anaethesia.github.io/img/lc.jpeg">
+<link rel="icon" type="image/png" sizes="32x32" href="https://anaethesia.github.io/img/lc.jpeg">
+<link rel="apple-touch-icon" href="https://anaethesia.github.io/img/lc.jpeg">
+<link rel="mask-icon" href="https://anaethesia.github.io/img/lc.jpeg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<meta name="generator" content="Hugo 0.86.0" />
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Learning about Distributed lock" />
+<meta property="og:description" content="分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://anaethesia.github.io/posts/tech/distributed_lock/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-02-14T15:00:00&#43;08:00" />
+<meta property="article:modified_time" content="2025-02-14T15:00:00&#43;08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Learning about Distributed lock"/>
+<meta name="twitter:description" content="分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://anaethesia.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻技术",
+      "item": "https://anaethesia.github.io/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Learning about Distributed lock",
+      "item": "https://anaethesia.github.io/posts/tech/distributed_lock/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Learning about Distributed lock",
+  "name": "Learning about Distributed lock",
+  "description": "分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时",
+  "keywords": [
+    "Tech", "Distributed lock"
+  ],
+  "articleBody": "分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时，传统的单机锁机制完全失效。典型案例包括：\n 电商库存扣减 金融账户余额操作 分布式任务调度 缓存雪崩保护  此时我们需要一个跨进程、跨主机的锁机制，而Redis凭借高性能和丰富的数据结构成为首选方案(轻巧且好用）。\n二、Redis分布式锁演进之路 1. 基础版单节点锁（SET NX PX） 1 2 3 4 5 6 7  // 获取锁 result, err := redis.SetNX(\"lock_key\", \"unique_value\", 10*time.Second).Result() // 释放锁 if redis.Get(\"lock_key\").Val() == \"unique_value\" { redis.Del(\"lock_key\") }   致命缺陷：\n 非原子操作风险 单点故障问题 时钟漂移隐患 误删其他客户端锁  2. RedLock算法（分布式锁的工业标准） 算法流程：\n 获取当前毫秒级时间戳T1 对N个独立Redis节点顺序请求加锁 计算获取锁耗时T2-T1 验证：成功节点数 ≥ N/2+1 且 剩余锁时间  耗时 若失败则向所有节点发起释放请求  三、RedSync——生产级的RedLock实现 核心特性：  自动续期机制（看门狗） 互斥性保证 容错时钟漂移 多实例故障转移  代码示例：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17  // 初始化 pool := goredis.NewPool(redisClient) rs := redsync.New(pool) // 获取锁 mutex := rs.NewMutex(\"order_lock\") if err := mutex.Lock(); err != nil { panic(err) } // 业务操作 processOrder() // 释放锁 if ok, err := mutex.Unlock(); !ok || err != nil { log.Fatal(\"unlock failed\") }   四、生产环境最佳实践 必须遵守的规定：  锁名称全局唯一（业务前缀+资源ID） 超时时间设置黄金法则：  业务最大耗时   避免锁内长时操作（超过TTL的50%） 必须实现重试机制： 1 2  backoff := redsync.NewExponentialBackoff(100*time.Millisecond, 1*time.Second) mutex.Lock(redsync.WithRetryDelayFunc(backoff))     典型陷阱警示：  GC暂停导致锁过期（Go需特别关注） 网络分区下的脑裂风险 锁被其他客户端覆盖 未正确处理锁续期失败  五、面试核心考点速查   基础原理\n CAP理论中的取舍（CP系统） 时钟漂移问题解决方案 锁续期机制实现原理    RedLock算法\n1 2  Q: RedLock需要多少个节点？ A: 建议5个节点，允许最多2个节点故障     失败场景处理\n 网络超时后的锁状态判定 锁自动释放后的数据一致性 客户端崩溃后的锁清理    高级话题\n 与Zookeeper对比 时钟跳跃问题终极解决方案 fencing token机制（Martin Kleppmann方案）    六、扩展思考 当面试官追问：“RedLock真的安全吗？“时，可以这样回答：\n“RedLock在大多数场景下是安全的，但在极端情况下（如全网时钟跳跃）仍可能失效。对于金融级系统，建议结合以下方案：\n 使用CAS机制的fencing token 数据库乐观锁作为最后防线 业务层的幂等性设计”  附录：性能压测数据    客户端数 吞吐量（ops/sec） 平均延迟(ms)     10 12,345 2.1   50 28,901 5.8   100 31,456 9.3    （测试环境：3节点Redis集群，AWS c5.xlarge）\n 推荐阅读：\n Redis官方分布式锁文档 RedSync GitHub仓库 《分布式系统：概念与设计》第5章  ",
+  "wordCount" : "1115",
+  "inLanguage": "en",
+  "datePublished": "2025-02-14T15:00:00+08:00",
+  "dateModified": "2025-02-14T15:00:00+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Anaethesia"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://anaethesia.github.io/posts/tech/distributed_lock/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Anaethesia's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://anaethesia.github.io/img/lc.jpeg"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://anaethesia.github.io/" accesskey="h" title="Anaethesia&#39;s Blog (Alt + H)">Anaethesia&#39;s Blog</a>
+            <span class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://anaethesia.github.io/search" title="🔍搜索 (Alt &#43; /)" accesskey=/>
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://anaethesia.github.io/" title="🏠主页">
+                    <span>🏠主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://anaethesia.github.io/posts" title="📚文章">
+                    <span>📚文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://anaethesia.github.io/archives" title="⏱时间轴">
+                    <span>⏱时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://anaethesia.github.io/tags" title="🔖标签">
+                    <span>🔖标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://anaethesia.github.io/about" title="🙋🏻‍♂️关于">
+                    <span>🙋🏻‍♂️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://anaethesia.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://anaethesia.github.io/posts/">Posts</a>&nbsp;»&nbsp;<a href="https://anaethesia.github.io/posts/tech/">👨🏻‍💻技术</a></div>
+    <h1 class="post-title">
+      Learning about Distributed lock
+    </h1>
+    <div class="post-meta"><span title='2025-02-14 15:00:00 +0800 CST'>2025-02-14</span>&nbsp;·&nbsp;字数:&nbsp;1115字&nbsp;·&nbsp;阅读时间:&nbsp;3分&nbsp;·&nbsp;Anaethesia
+
+</div>
+  </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+            <summary accesskey="c" title="(Alt + C)">
+                <span class="details">Table of Contents</span>
+            </summary>
+
+            <div class="inner"><ul>
+                    <li>
+                        <a href="#%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e6%b7%b1%e5%ba%a6%e8%a7%a3%e6%9e%90%e5%9f%ba%e4%ba%8eredis%e4%b8%8eredsync%e7%9a%84%e7%bb%88%e6%9e%81%e6%8c%87%e5%8d%97" aria-label="分布式锁深度解析：基于Redis与RedSync的终极指南">分布式锁深度解析：基于Redis与RedSync的终极指南</a><ul>
+                            
+                    <li>
+                        <a href="#%e4%b8%80%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81" aria-label="一、为什么需要分布式锁？">一、为什么需要分布式锁？</a></li>
+                    <li>
+                        <a href="#%e4%ba%8credis%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e6%bc%94%e8%bf%9b%e4%b9%8b%e8%b7%af" aria-label="二、Redis分布式锁演进之路">二、Redis分布式锁演进之路</a><ul>
+                            
+                    <li>
+                        <a href="#1-%e5%9f%ba%e7%a1%80%e7%89%88%e5%8d%95%e8%8a%82%e7%82%b9%e9%94%81set-nx-px" aria-label="1. 基础版单节点锁（SET NX PX）">1. 基础版单节点锁（SET NX PX）</a></li>
+                    <li>
+                        <a href="#2-redlock%e7%ae%97%e6%b3%95%e5%88%86%e5%b8%83%e5%bc%8f%e9%94%81%e7%9a%84%e5%b7%a5%e4%b8%9a%e6%a0%87%e5%87%86" aria-label="2. RedLock算法（分布式锁的工业标准）">2. RedLock算法（分布式锁的工业标准）</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e4%b8%89redsync%e7%94%9f%e4%ba%a7%e7%ba%a7%e7%9a%84redlock%e5%ae%9e%e7%8e%b0" aria-label="三、RedSync——生产级的RedLock实现">三、RedSync——生产级的RedLock实现</a><ul>
+                            
+                    <li>
+                        <a href="#%e6%a0%b8%e5%bf%83%e7%89%b9%e6%80%a7" aria-label="核心特性：">核心特性：</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e5%9b%9b%e7%94%9f%e4%ba%a7%e7%8e%af%e5%a2%83%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5" aria-label="四、生产环境最佳实践">四、生产环境最佳实践</a><ul>
+                            
+                    <li>
+                        <a href="#%e5%bf%85%e9%a1%bb%e9%81%b5%e5%ae%88%e7%9a%84%e8%a7%84%e5%ae%9a" aria-label="必须遵守的规定：">必须遵守的规定：</a></li>
+                    <li>
+                        <a href="#%e5%85%b8%e5%9e%8b%e9%99%b7%e9%98%b1%e8%ad%a6%e7%a4%ba" aria-label="典型陷阱警示：">典型陷阱警示：</a></li></ul>
+                    </li>
+                    <li>
+                        <a href="#%e4%ba%94%e9%9d%a2%e8%af%95%e6%a0%b8%e5%bf%83%e8%80%83%e7%82%b9%e9%80%9f%e6%9f%a5" aria-label="五、面试核心考点速查">五、面试核心考点速查</a></li>
+                    <li>
+                        <a href="#%e5%85%ad%e6%89%a9%e5%b1%95%e6%80%9d%e8%80%83" aria-label="六、扩展思考">六、扩展思考</a></li>
+                    <li>
+                        <a href="#%e9%99%84%e5%bd%95%e6%80%a7%e8%83%bd%e5%8e%8b%e6%b5%8b%e6%95%b0%e6%8d%ae" aria-label="附录：性能压测数据">附录：性能压测数据</a>
+                    </li>
+                </ul>
+                </li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+         
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 && 
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;   
+    }
+</script>
+
+  <div class="post-content"><meta name="referrer" content="no-referrer" />
+<h2 id="分布式锁深度解析基于redis与redsync的终极指南">分布式锁深度解析：基于Redis与RedSync的终极指南<a hidden class="anchor" aria-hidden="true" href="#分布式锁深度解析基于redis与redsync的终极指南">#</a></h2>
+<p><img loading="lazy" src="https://via.placeholder.com/800x400" alt="分布式锁封面图"  />
+</p>
+<h3 id="一为什么需要分布式锁">一、为什么需要分布式锁？<a hidden class="anchor" aria-hidden="true" href="#一为什么需要分布式锁">#</a></h3>
+<p>在现代分布式系统中，当多个进程/服务需要协调访问共享资源时，传统的单机锁机制完全失效。典型案例包括：</p>
+<ul>
+<li>电商库存扣减</li>
+<li>金融账户余额操作</li>
+<li>分布式任务调度</li>
+<li>缓存雪崩保护</li>
+</ul>
+<p>此时我们需要一个跨进程、跨主机的锁机制，而Redis凭借高性能和丰富的数据结构成为首选方案(轻巧且好用）。</p>
+<h3 id="二redis分布式锁演进之路">二、Redis分布式锁演进之路<a hidden class="anchor" aria-hidden="true" href="#二redis分布式锁演进之路">#</a></h3>
+<h4 id="1-基础版单节点锁set-nx-px">1. 基础版单节点锁（SET NX PX）<a hidden class="anchor" aria-hidden="true" href="#1-基础版单节点锁set-nx-px">#</a></h4>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// 获取锁
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">SetNX</span>(<span style="color:#e6db74">&#34;lock_key&#34;</span>, <span style="color:#e6db74">&#34;unique_value&#34;</span>, <span style="color:#ae81ff">10</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>).<span style="color:#a6e22e">Result</span>()
+
+<span style="color:#75715e">// 释放锁
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#e6db74">&#34;lock_key&#34;</span>).<span style="color:#a6e22e">Val</span>() <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;unique_value&#34;</span> {
+    <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">Del</span>(<span style="color:#e6db74">&#34;lock_key&#34;</span>)
+}
+</code></pre></td></tr></table>
+</div>
+</div><p><strong>致命缺陷</strong>：</p>
+<ul>
+<li>非原子操作风险</li>
+<li>单点故障问题</li>
+<li>时钟漂移隐患</li>
+<li>误删其他客户端锁</li>
+</ul>
+<h4 id="2-redlock算法分布式锁的工业标准">2. RedLock算法（分布式锁的工业标准）<a hidden class="anchor" aria-hidden="true" href="#2-redlock算法分布式锁的工业标准">#</a></h4>
+<p><strong>算法流程</strong>：</p>
+<ol>
+<li>获取当前毫秒级时间戳T1</li>
+<li>对N个独立Redis节点顺序请求加锁</li>
+<li>计算获取锁耗时T2-T1</li>
+<li>验证：成功节点数 ≥ N/2+1 且 剩余锁时间 &gt; 耗时</li>
+<li>若失败则向所有节点发起释放请求</li>
+</ol>
+<p><img loading="lazy" src="https://via.placeholder.com/600x300" alt="RedLock算法流程图"  />
+</p>
+<h3 id="三redsync生产级的redlock实现">三、RedSync——生产级的RedLock实现<a hidden class="anchor" aria-hidden="true" href="#三redsync生产级的redlock实现">#</a></h3>
+<h4 id="核心特性">核心特性：<a hidden class="anchor" aria-hidden="true" href="#核心特性">#</a></h4>
+<ul>
+<li>自动续期机制（看门狗）</li>
+<li>互斥性保证</li>
+<li>容错时钟漂移</li>
+<li>多实例故障转移</li>
+</ul>
+<p><strong>代码示例</strong>：</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// 初始化
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">pool</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">goredis</span>.<span style="color:#a6e22e">NewPool</span>(<span style="color:#a6e22e">redisClient</span>)
+<span style="color:#a6e22e">rs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">redsync</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">pool</span>)
+
+<span style="color:#75715e">// 获取锁
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">mutex</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rs</span>.<span style="color:#a6e22e">NewMutex</span>(<span style="color:#e6db74">&#34;order_lock&#34;</span>)
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mutex</span>.<span style="color:#a6e22e">Lock</span>(); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    panic(<span style="color:#a6e22e">err</span>)
+}
+
+<span style="color:#75715e">// 业务操作
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">processOrder</span>()
+
+<span style="color:#75715e">// 释放锁
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mutex</span>.<span style="color:#a6e22e">Unlock</span>(); !<span style="color:#a6e22e">ok</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#e6db74">&#34;unlock failed&#34;</span>)
+}
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="四生产环境最佳实践">四、生产环境最佳实践<a hidden class="anchor" aria-hidden="true" href="#四生产环境最佳实践">#</a></h3>
+<h4 id="必须遵守的规定">必须遵守的规定：<a hidden class="anchor" aria-hidden="true" href="#必须遵守的规定">#</a></h4>
+<ol>
+<li>锁名称全局唯一（业务前缀+资源ID）</li>
+<li>超时时间设置黄金法则：
+<ul>
+<li>业务最大耗时 &lt; 锁超时时间 &lt; Redis的TTL精度</li>
+</ul>
+</li>
+<li>避免锁内长时操作（超过TTL的50%）</li>
+<li>必须实现重试机制：
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">backoff</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">redsync</span>.<span style="color:#a6e22e">NewExponentialBackoff</span>(<span style="color:#ae81ff">100</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>, <span style="color:#ae81ff">1</span><span style="color:#f92672">*</span><span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+<span style="color:#a6e22e">mutex</span>.<span style="color:#a6e22e">Lock</span>(<span style="color:#a6e22e">redsync</span>.<span style="color:#a6e22e">WithRetryDelayFunc</span>(<span style="color:#a6e22e">backoff</span>))
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h4 id="典型陷阱警示">典型陷阱警示：<a hidden class="anchor" aria-hidden="true" href="#典型陷阱警示">#</a></h4>
+<ul>
+<li>GC暂停导致锁过期（Go需特别关注）</li>
+<li>网络分区下的脑裂风险</li>
+<li>锁被其他客户端覆盖</li>
+<li>未正确处理锁续期失败</li>
+</ul>
+<h3 id="五面试核心考点速查">五、面试核心考点速查<a hidden class="anchor" aria-hidden="true" href="#五面试核心考点速查">#</a></h3>
+<ol>
+<li>
+<p><strong>基础原理</strong></p>
+<ul>
+<li>CAP理论中的取舍（CP系统）</li>
+<li>时钟漂移问题解决方案</li>
+<li>锁续期机制实现原理</li>
+</ul>
+</li>
+<li>
+<p><strong>RedLock算法</strong></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">Q: RedLock需要多少个节点？
+A: 建议5个节点，允许最多2个节点故障
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p><strong>失败场景处理</strong></p>
+<ul>
+<li>网络超时后的锁状态判定</li>
+<li>锁自动释放后的数据一致性</li>
+<li>客户端崩溃后的锁清理</li>
+</ul>
+</li>
+<li>
+<p><strong>高级话题</strong></p>
+<ul>
+<li>与Zookeeper对比</li>
+<li>时钟跳跃问题终极解决方案</li>
+<li>fencing token机制（Martin Kleppmann方案）</li>
+</ul>
+</li>
+</ol>
+<h3 id="六扩展思考">六、扩展思考<a hidden class="anchor" aria-hidden="true" href="#六扩展思考">#</a></h3>
+<p>当面试官追问：&ldquo;RedLock真的安全吗？&ldquo;时，可以这样回答：</p>
+<p>&ldquo;RedLock在大多数场景下是安全的，但在极端情况下（如全网时钟跳跃）仍可能失效。对于金融级系统，建议结合以下方案：</p>
+<ol>
+<li>使用CAS机制的fencing token</li>
+<li>数据库乐观锁作为最后防线</li>
+<li>业务层的幂等性设计&rdquo;</li>
+</ol>
+<h3 id="附录性能压测数据">附录：性能压测数据<a hidden class="anchor" aria-hidden="true" href="#附录性能压测数据">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>客户端数</th>
+<th>吞吐量（ops/sec）</th>
+<th>平均延迟(ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>12,345</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>50</td>
+<td>28,901</td>
+<td>5.8</td>
+</tr>
+<tr>
+<td>100</td>
+<td>31,456</td>
+<td>9.3</td>
+</tr>
+</tbody>
+</table>
+<p>（测试环境：3节点Redis集群，AWS c5.xlarge）</p>
+<hr>
+<p><strong>推荐阅读</strong>：</p>
+<ol>
+<li><a href="https://redis.io/docs/latest/develop/use/patterns/distributed-locks/">Redis官方分布式锁文档</a></li>
+<li><a href="https://github.com/go-redsync/redsync">RedSync GitHub仓库</a></li>
+<li>《分布式系统：概念与设计》第5章</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://anaethesia.github.io/tags/tech/">Tech</a></li>
+      <li><a href="https://anaethesia.github.io/tags/distributed-lock/">Distributed lock</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://anaethesia.github.io/posts/life/life/">
+    <span class="title">Next Page »</span>
+    <br>
+    <span>Work life from graduation of HITSZ</span>
+  </a>
+</nav>
+
+  </footer><div>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+    <div id="tcomment"></div>
+    <script src="//cdn.jsdelivr.net/npm/@waline/client"></script>
+    <div id="waline"></div>
+    <script>
+      Waline({
+        el: '#waline',
+        serverURL: 'https://blog-api-rust.vercel.app',
+      });
+    </script>
+</div>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2025 <a href="https://anaethesia.github.io/">Anaethesia&#39;s Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = 'copy';
+
+        function copyingDone() {
+            copybutton.innerText = 'copied!';
+            setTimeout(() => {
+                copybutton.innerText = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

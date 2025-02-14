@@ -6,14 +6,23 @@
     <description>Recent content on Anaethesia&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 27 May 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 Feb 2025 15:00:00 +0800</lastBuildDate><atom:link href="https://anaethesia.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning about Distributed lock</title>
+      <link>https://anaethesia.github.io/posts/tech/distributed_lock/</link>
+      <pubDate>Fri, 14 Feb 2025 15:00:00 +0800</pubDate>
+      
+      <guid>https://anaethesia.github.io/posts/tech/distributed_lock/</guid>
+      <description>分布式锁深度解析：基于Redis与RedSync的终极指南 一、为什么需要分布式锁？ 在现代分布式系统中，当多个进程/服务需要协调访问共享资源时</description>
+    </item>
+    
     <item>
       <title>Work life from graduation of HITSZ</title>
       <link>https://anaethesia.github.io/posts/life/life/</link>
       <pubDate>Mon, 27 May 2024 00:00:00 +0800</pubDate>
       
       <guid>https://anaethesia.github.io/posts/life/life/</guid>
-      <description>大学毕业后的生活</description>
+      <description>大学毕业后的生活 题记：已经过去四年多的时光，再写起这篇文章，多半是有点回忆录的感觉。之前也想过很多次，想写这个东西，迟迟没有去写，一方面也不</description>
     </item>
     
     <item>
@@ -53,7 +62,7 @@
     </item>
     
     <item>
-      <title>About</title>
+      <title>About Me</title>
       <link>https://anaethesia.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
